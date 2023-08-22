@@ -233,9 +233,9 @@ Sub Reorder_GL_Report()
 
     
 
-    Dim Rng As Range
+    Dim rng As Range
 
-    Set Rng = Range("A1").CurrentRegion
+    Set rng = Range("A1").CurrentRegion
 
     'Check if the transactions are from more than one division
 
@@ -275,9 +275,9 @@ Sub Reorder_GL_Report()
 
     Loop Until UCase(RemainStr) = "ADM" Or UCase(RemainStr) = "CRS" Or UCase(RemainStr) = "EBC" Or UCase(RemainStr) = "EPS" Or UCase(RemainStr) = "ESA"
 
-    Rng.AutoFilter Field:=11, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
+    rng.AutoFilter Field:=11, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
 
-    Rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+    rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
 
     ActiveSheet.ShowAllData
 
@@ -303,7 +303,7 @@ Line2:
 
     'Clearing contents in EG number column that are not EG number
 
-    Rng.AutoFilter Field:=23, Criteria1:=Array("<>EG*"), Operator:=xlAnd
+    rng.AutoFilter Field:=23, Criteria1:=Array("<>EG*"), Operator:=xlAnd
 
     Range("W2:W" & Rrow).SpecialCells(xlCellTypeVisible).ClearContents
 
@@ -517,9 +517,9 @@ Sub Reorder_GP_Report()
 
    
 
-    Dim Rng As Range
+    Dim rng As Range
 
-    Set Rng = Range("A1").CurrentRegion
+    Set rng = Range("A1").CurrentRegion
 
     'Check if the transactions are from more than one division
 
@@ -559,9 +559,9 @@ Sub Reorder_GP_Report()
 
     'Delete rows that are not from the division chosen
 
-    Rng.AutoFilter Field:=11, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
+    rng.AutoFilter Field:=11, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
 
-    Rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+    rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
 
     ActiveSheet.ShowAllData
 
@@ -1399,9 +1399,9 @@ Line2:
 
     Range("A5:O5").AutoFilter Field:=14, Criteria1:="<=0"
 
-    Set Rng = Range("A6:A" & Prow).SpecialCells(xlCellTypeVisible)
+    Set rng = Range("A6:A" & Prow).SpecialCells(xlCellTypeVisible)
 
-    For Each cell In Rng
+    For Each cell In rng
 
         Range("A" & cell.Row).Value = WorksheetFunction.Substitute(Range("A" & cell.Row), " negative", "")
 
@@ -1453,9 +1453,9 @@ Line2:
 
     Range("A1:U" & Wrow3).AutoFilter Field:=10, Criteria1:="<0"
 
-    Set Rng = Range("A2:A" & Wrow3).SpecialCells(xlCellTypeVisible)
+    Set rng = Range("A2:A" & Wrow3).SpecialCells(xlCellTypeVisible)
 
-    For Each cell In Rng
+    For Each cell In rng
 
         Range("A" & cell.Row).Value = WorksheetFunction.Substitute(Range("A" & cell.Row), " negative", "")
 
@@ -2781,9 +2781,9 @@ Sub Reorder_SO_Lines()
 
     Rrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
 
-    Dim Rng As Range
+    Dim rng As Range
 
-    Set Rng = Range("A1").CurrentRegion
+    Set rng = Range("A1").CurrentRegion
 
     'Check if the transactions are from more than one division
 
@@ -2823,9 +2823,9 @@ Sub Reorder_SO_Lines()
 
     'Delete rows that are not from the division chosen
 
-    Rng.AutoFilter Field:=10, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
+    rng.AutoFilter Field:=10, Criteria1:=Array("<>" & RemainStr), Operator:=xlAnd
 
-    Rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+    rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
 
     ActiveSheet.ShowAllData
 
@@ -2892,5 +2892,1421 @@ Line3:
     End If
 
       
+
+End Sub
+
+Sub GST()
+
+   
+
+    'Make sure the format of the raw data is correct.
+
+    Dim APcol As Long
+
+    APcol = Worksheets("AP").Cells(1, Worksheets("AP").Columns.Count).End(xlToLeft).Column
+
+    If APcol = 17 Then
+
+    Else: MsgBox "Please make sure Worksheet AP has a table with exact 17 columns!"
+
+    Exit Sub: End If
+
+    If Worksheets("AP").Range("A1").Value = "Tax invoice account" And Worksheets("AP").Range("J1").Value = "GST" Then
+
+    Else: MsgBox "Please makse sure on Worksheet AP, Cell A1 is 'Tax invoice account' and Cell J1 is 'GST'!"
+
+    Exit Sub: End If
+
+    If Worksheets("VL").Range("A1").Value = "Vendor account" And Worksheets("VL").Range("D1").Value = "GST group" Then
+
+    Else: MsgBox "Please makse sure on Worksheet VL, Cell A1 is 'Vendor account' and Cell D1 is 'GST group'!"
+
+    Exit Sub: End If
+
+    Dim ARcol As Long
+
+    ARcol = Worksheets("AR").Cells(1, Worksheets("AR").Columns.Count).End(xlToLeft).Column
+
+    If ARcol = 17 Then
+
+    Else: MsgBox "Please make sure Worksheet AR has a table with exact 17 columns!"
+
+    Exit Sub: End If
+
+    If Worksheets("AR").Range("A1").Value = "Tax invoice account" And Worksheets("AR").Range("I1").Value = "GST" Then
+
+    Else: MsgBox "Please makse sure on Worksheet AR, Cell A1 is 'Tax invoice account' and Cell I1 is 'GST'!"
+
+    Exit Sub: End If
+
+    If Worksheets("CL").Range("C1").Value = "GST group" Then
+
+    Else: MsgBox "Please makse sure on Worksheet CL, Cell C1 is 'GST group'!"
+
+    Exit Sub: End If
+
+    If Worksheets("GL").Range("B1").Value = "Voucher" And Worksheets("GL").Range("E1").Value = "Description" Then
+
+    Else: MsgBox "Please makse sure on Worksheet GL, Cell B1 is 'Voucher' and Cell E1 is 'Description'!"
+
+    Exit Sub: End If
+
+    'Make sure no filiters have been applied on the raw data.
+
+    On Error Resume Next
+
+    Worksheets("AP").ShowAllData
+
+    Worksheets("VL").ShowAllData
+
+    Worksheets("AR").ShowAllData
+
+    Worksheets("CL").ShowAllData
+
+    Worksheets("GL").ShowAllData
+
+    On Error GoTo 0
+
+ 
+
+   
+
+    
+
+    '''GL
+
+    Worksheets("GL").Select
+
+    Range("I1").FormulaR1C1 = "Account Number"
+
+    Range("I1").Interior.Color = 49407
+
+    Range("I1").Font.ColorIndex = xlAutomatic
+
+    If Not Columns("I").NumberFormat = "General" Then
+
+    Columns("I").NumberFormat = "General"
+
+    End If
+
+   
+
+    Dim GLrow0 As Long
+
+    GLrow0 = Cells(Rows.Count, "A").End(xlUp).Row
+
+    Range("I2:I" & GLrow0).FormulaR1C1 = "=LEFT([@[Ledger account]],5)"
+
+   
+
+    
+
+    '''AP GSTCode
+
+    Application.DisplayAlerts = False
+
+    Worksheets("AP GSTCode").Delete
+
+    Application.DisplayAlerts = True
+
+    Worksheets("AP").Copy After:=Worksheets("ITI")
+
+    ActiveSheet.Name = "AP GSTCode"
+
+    With Worksheets("AP GSTCode").Tab
+
+        .ThemeColor = xlThemeColorLight2
+
+        .TintAndShade = 0.399975585192419
+
+    End With
+
+    Range("R1").Value = "GST Code from VL"
+
+    Range("S1").Value = "Code Check"
+
+    Range("T1").Value = "Comment"
+
+    Range("R1:T1").Select
+
+    With Selection.Interior
+
+        .Color = 49407
+
+    End With
+
+    With Selection.Font
+
+        .ColorIndex = xlAutomatic
+
+    End With
+
+    Range("R2").FormulaR1C1 = "=INDEX(VL!C[-14],MATCH('AP GSTCode'!RC1,VL!C1,0))"
+
+    Range("S2").FormulaR1C1 = "=IF((RC[-9]<>0)*(RC[-1]=""GST"")+(RC[-9]=0)*(RC[-1]<>""GST""),""OK"",""Review"")"
+
+    Range("A:C,G:G").ColumnWidth = 12
+
+    Range("N:Q").ColumnWidth = 4
+
+    Dim AProw As Long
+
+    AProw = Cells(Cells.Rows.Count, "H").End(xlUp).Row
+
+    Range("R2:T" & AProw).Interior.ThemeColor = xlThemeColorDark1
+
+    'Optus Mobile Acct# RS949
+
+    If Application.WorksheetFunction.CountIf(Range("A2:A" & AProw), "Ven1004") > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=1, Criteria1:="Ven1004"
+
+    Range("T2:T" & AProw).SpecialCells(xlCellTypeVisible).Value = "GST in EG"
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+    'ASIC
+
+    If Application.WorksheetFunction.CountIf(Range("A2:A" & AProw), "Ven24") > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=1, Criteria1:="Ven24"
+
+    Range("T2:T" & AProw).SpecialCells(xlCellTypeVisible).Value = "AISC FEE no GST"
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+    'ACMA
+
+    If Application.WorksheetFunction.CountIf(Range("A2:A" & AProw), "Ven253") > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=1, Criteria1:="Ven253"
+
+    Range("T2:T" & AProw).SpecialCells(xlCellTypeVisible).Value = "NO GST"
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+    'ATO
+
+    If Application.WorksheetFunction.CountIf(Range("A2:A" & AProw), "Ven38") > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=1, Criteria1:="Ven38"
+
+    Range("T2:T" & AProw).SpecialCells(xlCellTypeVisible).Value = "NO GST"
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+    'Expense claim
+
+    If Application.WorksheetFunction.CountIf(Range("H2:H" & AProw), "EXP20*") > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=8, Criteria1:="EXP20*"
+
+    Range("T2:T" & AProw).SpecialCells(xlCellTypeVisible).Value = "Expense claim"
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+    '$0 Tax invoice amount
+
+    If Application.WorksheetFunction.CountIfs(Range("K2:K" & AProw), 0, Range("J2:J" & AProw), 0) > 0 Then
+
+    Range("A1:T" & AProw).AutoFilter Field:=11, Criteria1:="0.00"
+
+    Range("A1:T" & AProw).AutoFilter Field:=10, Criteria1:="0.00"
+
+    Application.DisplayAlerts = False
+
+    Range("A2:T" & AProw).SpecialCells(xlCellTypeVisible).Delete
+
+    Application.DisplayAlerts = True
+
+    ActiveSheet.ShowAllData
+
+ 
+
+    End If
+
+   
+
+    AProw = Cells(Cells.Rows.Count, "H").End(xlUp).Row
+
+    If Application.WorksheetFunction.CountIf(Range("S2:S" & AProw), "Review") = 0 Then
+
+    Else
+
+    Range("A1:T" & AProw).AutoFilter Field:=19, Criteria1:="Review"
+
+    End If
+
+   
+
+    'Go back to cell A1
+
+    Application.Goto Range("A1"), True
+
+   
+
+    
+
+    
+
+    '''AR GSTCode
+
+    Application.DisplayAlerts = False
+
+    Worksheets("AR GSTCode").Delete
+
+    Application.DisplayAlerts = True
+
+    Worksheets("AR").Copy After:=Worksheets("AP GSTAmount")
+
+    ActiveSheet.Name = "AR GSTCode"
+
+    With Worksheets("AR GSTCode").Tab
+
+        .ThemeColor = xlThemeColorLight2
+
+        .TintAndShade = 0.399975585192419
+
+    End With
+
+    Range("R1").Value = "GST Code from VL"
+
+    Range("S1").Value = "Code Check"
+
+    Range("T1").Value = "Comment"
+
+    Range("R1:T1").Interior.Color = 49407
+
+    Range("R1:T1").Font.ColorIndex = xlAutomatic
+
+    Range("R:T").NumberFormat = "General"
+
+   
+
+ 
+
+    Range("R2").FormulaR1C1 = "=INDEX(CL!C[-15],MATCH('AR GSTCode'!RC[-17],CL!C[-17],0))"
+
+    Range("S2").FormulaR1C1 = "=IF((RC[-10]<>0)*(RC[-1]=""GST"")+(RC[-10]=0)*(RC[-1]<>""GST""),""OK"",""Review"")"
+
+    Range("A:C,G:G").ColumnWidth = 12
+
+    Range("N:Q").ColumnWidth = 4
+
+    Dim ARrow As Long
+
+    ARrow = Cells(Cells.Rows.Count, "H").End(xlUp).Row
+
+    Range("R2:T" & ARrow).Select
+
+    With Selection.Interior
+
+        .ThemeColor = xlThemeColorDark1
+
+    End With
+
+   
+
+    'Tax invoice amount < $0.06
+
+    If Application.WorksheetFunction.CountIf(Range("J2:J" & ARrow), "Review") < 0.06 Then
+
+    Range("A1:T" & ARrow).AutoFilter Field:=10, Criteria1:="<0.06"
+
+    If Application.WorksheetFunction.CountIf(Range("S2:S" & ARrow), "Review") > 0 Then
+
+    ARrow = Cells(Cells.Rows.Count, "H").End(xlUp).Row
+
+    Range("A1:T" & ARrow).AutoFilter Field:=19, Criteria1:="Review"
+
+    Range("T2:T" & ARrow).SpecialCells(xlCellTypeVisible).Value = "Tax invoice amount < $0.06"
+
+    ActiveSheet.ShowAllData
+
+    Else: ActiveSheet.ShowAllData
+
+    End If
+
+    End If
+
+   
+
+    '$0 Tax invoice amount
+
+    If Application.WorksheetFunction.CountIfs(Range("J2:J" & ARrow), 0, Range("I2:I" & ARrow), 0) > 0 Then
+
+    Range("A1:T" & ARrow).AutoFilter Field:=10, Criteria1:="0.00"
+
+    Range("A1:T" & ARrow).AutoFilter Field:=9, Criteria1:="0.00"
+
+    Application.DisplayAlerts = False
+
+    Range("A2:T" & ARrow).SpecialCells(xlCellTypeVisible).Delete
+
+    Application.DisplayAlerts = True
+
+    ActiveSheet.ShowAllData
+
+    End If
+
+   
+
+    
+
+    ARrow = Cells(Cells.Rows.Count, "H").End(xlUp).Row
+
+   
+
+    If Application.WorksheetFunction.CountIf(Range("S2:S" & ARrow), "Review") > 0 Then
+
+    Range("A1:T" & ARrow).AutoFilter Field:=19, Criteria1:="Review"
+
+    End If
+
+   
+
+    'Go back to cell A1
+
+   Application.Goto Range("A1"), True
+
+   
+
+    
+
+    
+
+    '''AP GSTAmount
+
+    Worksheets("AP GSTAmount").Select
+
+    Dim objPT As PivotTable, iCount As Integer
+
+    For iCount = ActiveSheet.PivotTables.Count To 1 Step -1
+
+    Set objPT = ActiveSheet.PivotTables(iCount)
+
+    objPT.PivotSelect ""
+
+    Selection.Clear
+
+    Next iCount
+
+   
+
+    Range("N1:P2").ClearContents
+
+     
+
+    Dim PSheet As Worksheet
+
+    Dim DSheet As Worksheet
+
+    Dim PCache As PivotCache
+
+    Dim PTable As PivotTable
+
+    Dim PRange As Range
+
+    Dim LastRow As Long
+
+    Dim LastCol As Long
+
+    'Insert a New Blank Worksheet
+
+    On Error Resume Next
+
+    Sheets.Add After:=Sheets("AP GSTAmount")
+
+    ActiveSheet.Name = "PivotTable"
+
+    Set PSheet = Worksheets("PivotTable")
+
+    Set DSheet = Worksheets("AP GSTCode")
+
+    'Define Data Range
+
+    LastRow = DSheet.Cells(Rows.Count, 1).End(xlUp).Row
+
+    LastCol = DSheet.Cells(1, Columns.Count).End(xlToLeft).Column
+
+    Set PRange = DSheet.Cells(1, 1).Resize(LastRow, LastCol)
+
+    'Define Pivot Cache
+
+    Set PCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=PRange).CreatePivotTable(TableDestination:=PSheet.Cells(1, 3), TableName:="AP GSTCode")
+
+    'Insert Row Fields
+
+    With ActiveSheet.PivotTables("AP GSTCode").PivotFields("Voucher")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("AP GSTCode").PivotFields("GST Code from VL")
+
+        .Orientation = xlRowField
+
+        .Position = 2
+
+    End With
+
+    With ActiveSheet.PivotTables("AP GSTCode").PivotFields("Currency")
+
+        .Orientation = xlRowField
+
+        .Position = 3
+
+    End With
+
+    ActiveSheet.PivotTables("AP GSTCode").AddDataField ActiveSheet.PivotTables("AP GSTCode").PivotFields("GST"), "Sum of GST", xlSum
+
+    Range("A6").Select
+
+    With ActiveSheet.PivotTables("AP GSTCode")
+
+        .InGridDropZones = True
+
+        .RowAxisLayout xlTabularRow
+
+    End With
+
+    ActiveSheet.PivotTables("AP GSTCode").PivotFields("Voucher").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    Range("B6").Select
+
+    ActiveSheet.PivotTables("AP GSTCode").PivotFields("GST Code from VL").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    ActiveSheet.PivotTables("AP GSTCode").PivotSelect "", xlDataAndLabel, True
+
+    Selection.Copy
+
+    Worksheets("AP GSTAmount").Range("A3").PasteSpecial
+
+    
+
+    Application.Wait (Now + TimeValue("0:00:1.5"))
+
+   
+
+    Application.DisplayAlerts = False
+
+    Worksheets("PivotTable").Delete
+
+    Application.DisplayAlerts = True
+
+   
+
+    
+
+    'Insert a New Blank Worksheet
+
+    On Error Resume Next
+
+    Sheets.Add After:=Sheets("AP GSTAmount")
+
+    ActiveSheet.Name = "PivotTable"
+
+    Set PSheet = Worksheets("PivotTable")
+
+    Set DSheet = Worksheets("GL")
+
+    'Define Data Range
+
+    LastRow = DSheet.Cells(Rows.Count, 1).End(xlUp).Row
+
+    LastCol = DSheet.Cells(1, Columns.Count).End(xlToLeft).Column
+
+    Set PRange = DSheet.Cells(1, 1).Resize(LastRow, LastCol)
+
+    'Define Pivot Cache
+
+    Set PCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=PRange).CreatePivotTable(TableDestination:=PSheet.Cells(1, 10), TableName:="GL")
+
+    'Insert Row Fields
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Account Number")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Account Number")
+
+        .Orientation = xlPageField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Voucher")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Currency")
+
+        .Orientation = xlRowField
+
+        .Position = 2
+
+    End With
+
+    ActiveSheet.PivotTables("GL").AddDataField ActiveSheet.PivotTables("GL").PivotFields("Amount"), "Sum of Amount", xlSum
+
+    Range("J7").Select
+
+    With ActiveSheet.PivotTables("GL")
+
+        .InGridDropZones = True
+
+        .RowAxisLayout xlTabularRow
+
+    End With
+
+    Range("J10").Select
+
+    ActiveSheet.PivotTables("GL").PivotFields("Voucher").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    ActiveSheet.PivotTables("GL").PivotSelect "", xlDataAndLabel, True
+
+    ActiveSheet.PivotTables("GL").PivotFields("Account Number").ClearAllFilters
+
+    ActiveSheet.PivotTables("GL").PivotFields("Account Number").CurrentPage = "16100"
+
+    Selection.Copy
+
+    Worksheets("AP GSTAmount").Range("J1").PasteSpecial
+
+   
+
+    Application.Wait (Now + TimeValue("0:00:1.5"))
+
+   
+
+    Application.DisplayAlerts = False
+
+    Worksheets("PivotTable").Delete
+
+    Application.DisplayAlerts = True
+
+   
+
+    Worksheets("AP GSTAmount").Select
+
+    Dim Vrow As Long
+
+    Vrow = Cells(Cells.Rows.Count, "F").End(xlUp).Row
+
+    Range("F5:H" & Vrow).ClearContents
+
+    Dim Trow As Long
+
+    Trow = Cells(Cells.Rows.Count, "D").End(xlUp).Row
+
+ 
+
+    Range("F5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-5],C[4],1,FALSE)"
+
+    Selection.AutoFill Destination:=Range("F5:F" & Trow - 1)
+
+    Range("G5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-6],C[3]:C[5],3,FALSE)"
+
+    Selection.AutoFill Destination:=Range("G5:G" & Trow - 1)
+
+    Range("H5").Select
+
+    Selection.FormulaR1C1 = "=IFERROR(RC[-4]-RC[-1],RC[-4])"
+
+    Selection.AutoFill Destination:=Range("H5:H" & Trow - 1)
+
+   
+
+    Vrow = Cells(Cells.Rows.Count, "N").End(xlUp).Row
+
+    Range("N5:R" & Vrow).ClearContents
+
+    Trow = Cells(Cells.Rows.Count, "L").End(xlUp).Row
+
+   
+
+    Range("N5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-4],C[-13],1,FALSE)"
+
+    Selection.AutoFill Destination:=Range("N5:N" & Trow - 1)
+
+    Range("O5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-5],C[-14]:C[-11],4,FALSE)"
+
+    Selection.AutoFill Destination:=Range("O5:O" & Trow - 1)
+
+    Range("P5").Select
+
+    Selection.FormulaR1C1 = "=IFERROR(RC[-4]-RC[-1],RC[-4])"
+
+    Selection.AutoFill Destination:=Range("P5:P" & Trow - 1)
+
+    Range("Q5").Select
+
+    Selection.FormulaR1C1 = "=IF(IFERROR(SEARCH(""PAYMENT BY AUTHORITY"",VLOOKUP(RC[-7],GL!C[-15]:C[-12],4,0)),0)+IFERROR(SEARCH(""WITHDRAWAL WESTPAC"",VLOOKUP(RC[-7],GL!C[-15]:C[-12],4,0)),0)>0,""Merchant fee"","""")"
+
+    Selection.AutoFill Destination:=Range("Q5:Q" & Trow - 1)
+
+    For Each cell In Range("J5:J" & Trow)
+
+    If InStr(1, cell.Value, "CPA") > 0 Then
+
+    Range("Q" & Split(cell.Address, "$")(2)).FormulaR1C1 = "=IF(ISNUMBER((SEARCH(""CPA"",VLOOKUP(RC[-7],GL!C[-15]:C[-12],1,0))))+ISNUMBER(SEARCH(""CUS"",VLOOKUP(RC[-7],GL!C[-15]:C[-12],4,0)))>1,""AAPT Invoice, GST under EG"","""")"
+
+    End If
+
+    Next
+
+ 
+
+ 
+
+ 
+
+    Range("Q5:Q" & Trow - 1).Value = Range("Q5:Q" & Trow - 1).Value
+
+   
+
+    For Each cell In Range("N5:N" & Trow)
+
+    If Application.WorksheetFunction.IsError(cell.Value) = True Then
+
+    Range("R" & Split(cell.Address, "$")(2)).FormulaR1C1 = "=VLOOKUP(RC[-8],GL!C[-16]:C[-13],4,0)"
+
+   
+
+    Range("N1").Value = "Merchant fee"
+
+    Range("N2").Value = "AAPT Invoice, GST under EG"
+
+    Range("P1").FormulaR1C1 = "=SUMIF(R[4]C[1]:R[" & Trow - 2 & "]C[1],""Merchant fee"",R[4]C:R[" & Trow - 2 & "]C)"
+
+    Range("P2").FormulaR1C1 = "=SUMIF(R[3]C[1]:R[" & Trow - 3 & "]C[1],""AAPT Invoice, GST under EG"",R[3]C:R[" & Trow - 2 & "]C)"
+
+    End If
+
+    Next
+
+   
+
+    For Each cell In Range("R5:R" & Trow)
+
+    If InStr(1, cell.Value, "ConnectWise") > 0 = True Then
+
+    Range("Q" & Split(cell.Address, "$")(2)).FormulaR1C1 = "=IF(ISNUMBER(SEARCH(""VPA"",RC[-7])),""AAPT Invoice, GST under EG"","""")"
+
+   
+
+    Range("N1").Value = "Merchant fee"
+
+    Range("N2").Value = "AAPT Invoice, GST under EG"
+
+    Range("P1").FormulaR1C1 = "=SUMIF(R[4]C[1]:R[" & Trow - 2 & "]C[1],""Merchant fee"",R[4]C:R[" & Trow - 2 & "]C)"
+
+    Range("P2").FormulaR1C1 = "=SUMIF(R[3]C[1]:R[" & Trow - 3 & "]C[1],""AAPT Invoice, GST under EG"",R[3]C:R[" & Trow - 2 & "]C)"
+
+    End If
+
+    Next
+
+   
+
+    
+
+    Range("Q5:Q" & Trow).Value = Range("Q5:Q" & Trow).Value
+
+   
+
+    
+
+    Worksheets("AP GSTAmount").Select
+
+    Columns("A:A,F:F,J:J,N:N").ColumnWidth = 14
+
+    Columns("B:C").ColumnWidth = 6
+
+    Columns("I:I").ColumnWidth = 10
+
+    Columns("D:D,G:G,L:L,O:O,S:S").ColumnWidth = 5
+
+    Columns("H:H,I:I,P:P,T:U").ColumnWidth = 8.5
+
+    Columns("K:K").ColumnWidth = 7.5
+
+    Columns("Q:Q").ColumnWidth = 26.5
+
+ 
+
+   
+
+ 
+
+    '''AR GSTAmount
+
+    Worksheets("AR GSTAmount").Select
+
+    For iCount = ActiveSheet.PivotTables.Count To 1 Step -1
+
+    Set objPT = ActiveSheet.PivotTables(iCount)
+
+    objPT.PivotSelect ""
+
+    Selection.Clear
+
+    Next iCount
+
+    Range("L1").ClearContents
+
+   
+
+ 
+
+    'Insert a New Blank Worksheet
+
+    On Error Resume Next
+
+    Sheets.Add After:=Sheets("AR GSTAmount")
+
+    ActiveSheet.Name = "PivotTable"
+
+    Set PSheet = Worksheets("PivotTable")
+
+    Set DSheet = Worksheets("AR GSTCode")
+
+    'Define Data Range
+
+    LastRow = DSheet.Cells(Rows.Count, 1).End(xlUp).Row
+
+    LastCol = DSheet.Cells(1, Columns.Count).End(xlToLeft).Column
+
+    Set PRange = DSheet.Cells(1, 1).Resize(LastRow, LastCol)
+
+    'Define Pivot Cache
+
+    Set PCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=PRange).CreatePivotTable(TableDestination:=PSheet.Cells(1, 3), TableName:="AR GSTCode")
+
+    'Insert Row Fields
+
+    With ActiveSheet.PivotTables("AR GSTCode").PivotFields("Voucher")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("AR GSTCode").PivotFields("GST Code from VL")
+
+        .Orientation = xlRowField
+
+        .Position = 2
+
+    End With
+
+    With ActiveSheet.PivotTables("AR GSTCode").PivotFields("Currency")
+
+        .Orientation = xlRowField
+
+        .Position = 3
+
+    End With
+
+    ActiveSheet.PivotTables("AR GSTCode").AddDataField ActiveSheet.PivotTables("AR GSTCode").PivotFields("GST"), "Sum of GST", xlSum
+
+    Range("A6").Select
+
+    With ActiveSheet.PivotTables("AR GSTCode")
+
+        .InGridDropZones = True
+
+        .RowAxisLayout xlTabularRow
+
+    End With
+
+    ActiveSheet.PivotTables("AR GSTCode").PivotFields("Voucher").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    Range("B6").Select
+
+    ActiveSheet.PivotTables("AR GSTCode").PivotFields("GST Code from VL").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    ActiveSheet.PivotTables("AR GSTCode").PivotSelect "", xlDataAndLabel, True
+
+    Selection.Copy
+
+    Worksheets("AR GSTAmount").Range("A3").PasteSpecial
+
+   
+
+    Application.Wait (Now + TimeValue("0:00:1.5"))
+
+   
+
+    Application.DisplayAlerts = False
+
+    Worksheets("PivotTable").Delete
+
+    Application.DisplayAlerts = True
+
+   
+
+    'Insert a New Blank Worksheet
+
+    On Error Resume Next
+
+    Sheets.Add After:=Sheets("AR GSTAmount")
+
+    ActiveSheet.Name = "PivotTable"
+
+    Set PSheet = Worksheets("PivotTable")
+
+    Set DSheet = Worksheets("GL")
+
+    'Define Data Range
+
+    LastRow = DSheet.Cells(Rows.Count, 1).End(xlUp).Row
+
+    LastCol = DSheet.Cells(1, Columns.Count).End(xlToLeft).Column
+
+    Set PRange = DSheet.Cells(1, 1).Resize(LastRow, LastCol)
+
+    'Define Pivot Cache
+
+    Set PCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=PRange).CreatePivotTable(TableDestination:=PSheet.Cells(1, 10), TableName:="GL")
+
+    'Insert Row Fields
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Account Number")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Account Number")
+
+        .Orientation = xlPageField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Voucher")
+
+        .Orientation = xlRowField
+
+        .Position = 1
+
+    End With
+
+    With ActiveSheet.PivotTables("GL").PivotFields("Currency")
+
+        .Orientation = xlRowField
+
+        .Position = 2
+
+    End With
+
+    ActiveSheet.PivotTables("GL").AddDataField ActiveSheet.PivotTables("GL").PivotFields("Amount"), "Sum of Amount", xlSum
+
+    Range("J7").Select
+
+    With ActiveSheet.PivotTables("GL")
+
+        .InGridDropZones = True
+
+        .RowAxisLayout xlTabularRow
+
+    End With
+
+    Range("J10").Select
+
+    ActiveSheet.PivotTables("GL").PivotFields("Voucher").Subtotals = Array(False, False, False, False, False, False, False, False, False, False, False, False)
+
+    ActiveSheet.PivotTables("GL").PivotSelect "", xlDataAndLabel, True
+
+    ActiveSheet.PivotTables("GL").PivotSelect "", xlDataAndLabel, True
+
+    ActiveSheet.PivotTables("GL").PivotFields("Account Number").ClearAllFilters
+
+    ActiveSheet.PivotTables("GL").PivotFields("Account Number").CurrentPage = "24100"
+
+    Selection.Copy
+
+    Worksheets("AR GSTAmount").Range("J1").PasteSpecial
+
+   
+
+    Application.Wait (Now + TimeValue("0:00:1.5"))
+
+   
+
+    Application.DisplayAlerts = False
+
+    Worksheets("PivotTable").Delete
+
+    Application.DisplayAlerts = True
+
+   
+
+    Worksheets("AR GSTAmount").Select
+
+    Vrow = Cells(Cells.Rows.Count, "F").End(xlUp).Row
+
+    Range("F5:H" & Vrow).ClearContents
+
+ 
+
+    Trow = Cells(Cells.Rows.Count, "D").End(xlUp).Row
+
+ 
+
+    Range("F5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-5],C[4],1,FALSE)"
+
+    Selection.AutoFill Destination:=Range("F5:F" & Trow - 1)
+
+    Range("G5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-6],C[3]:C[5],3,FALSE)"
+
+    Selection.AutoFill Destination:=Range("G5:G" & Trow - 1)
+
+    Range("H5").Select
+
+    Selection.FormulaR1C1 = "=IFERROR(RC[-4]+RC[-1],RC[-4])"
+
+    Selection.AutoFill Destination:=Range("H5:H" & Trow - 1)
+
+   
+
+    Vrow = Cells(Cells.Rows.Count, "N").End(xlUp).Row
+
+    Range("N5:Q" & Vrow).ClearContents
+
+    Trow = Cells(Cells.Rows.Count, "L").End(xlUp).Row
+
+   
+
+    Range("N5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-4],C[-13],1,FALSE)"
+
+    Selection.AutoFill Destination:=Range("N5:N" & Trow - 1)
+
+    Range("O5").Select
+
+    Selection.FormulaR1C1 = "=VLOOKUP(RC[-5],C[-14]:C[-11],4,FALSE)"
+
+    Selection.AutoFill Destination:=Range("O5:O" & Trow - 1)
+
+    Range("P5").Select
+
+    Selection.FormulaR1C1 = "=IFERROR(RC[-4]+RC[-1],RC[-4])"
+
+    Selection.AutoFill Destination:=Range("P5:P" & Trow - 1)
+
+   
+
+    Worksheets("AR GSTAmount").Select
+
+    Columns("A:A,F:F,J:J,N:N").ColumnWidth = 14
+
+    Columns("B:C").ColumnWidth = 6
+
+    Columns("I:I").ColumnWidth = 10
+
+    Columns("D:D,G:G,L:L,O:O,S:S").ColumnWidth = 5
+
+    Columns("H:H,I:I,P:P,T:U").ColumnWidth = 8.5
+
+    Columns("K:K").ColumnWidth = 7.5
+
+    Columns("Q:Q").ColumnWidth = 26.5
+
+   
+
+    
+
+    
+
+    
+
+ 
+
+    '''GSTAdj
+
+Line1:
+
+    Application.DisplayAlerts = False
+
+    Worksheets("GSTAdj").Delete
+
+    Application.DisplayAlerts = True
+
+    Worksheets("GL").Copy After:=Worksheets("AR GSTAmount")
+
+    ActiveSheet.Name = "GSTAdj"
+
+    With Worksheets("GSTAdj").Tab
+
+        .ThemeColor = xlThemeColorLight2
+
+        .TintAndShade = 0.399975585192419
+
+    End With
+
+    If Worksheets("GSTAdj").ListObjects.Count > 0 Then
+
+    ActiveSheet.ListObjects(1).Unlist
+
+    End If
+
+    Dim GLrow As Long
+
+    GLrow = Cells(Cells.Rows.Count, "F").End(xlUp).Row
+
+    Range("A1:I" & GLrow).AutoFilter
+
+    Range("A" & GLrow + 2).Value = "Grand Total"
+
+    Range("H" & GLrow + 2).NumberFormat = "General"
+
+    Range("H" & GLrow + 2).FormulaR1C1 = "=SUM(R[" & -GLrow & "]C:R[-1]C)"
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Select
+
+    With Selection.Borders(xlEdgeTop)
+
+        .LineStyle = xlContinuous
+
+        .Weight = xlThin
+
+    End With
+
+    With Selection.Borders(xlEdgeBottom)
+
+        .LineStyle = xlDouble
+
+        .Weight = xlThick
+
+    End With
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Font.Bold = True
+
+   
+
+    If Application.WorksheetFunction.CountIf(Range("I2:I" & GLrow), "24300") > 0 Then
+
+    Range("A1:I" & GLrow).AutoFilter Field:=9, Criteria1:="24300"
+
+    ''''''''Delete hidden rows''''''''
+
+    Dim oRow As Range, rng As Range
+
+    Dim myRows As Range
+
+    With Sheets("GSTAdj")
+
+        Set myRows = Intersect(.Range("A:A").EntireRow, .UsedRange)
+
+        If myRows Is Nothing Then GoTo Line2
+
+    End With
+
+    For Each oRow In myRows.Columns(1).Cells
+
+        If oRow.EntireRow.Hidden Then
+
+            If rng Is Nothing Then
+
+                Set rng = oRow
+
+            Else
+
+                Set rng = Union(rng, oRow)
+
+            End If
+
+        End If
+
+    Next
+
+    If Not rng Is Nothing Then rng.EntireRow.Delete
+
+    ''''''''Delete hidden rows''''''''
+
+    Else: Range("A2:I" & GLrow).EntireRow.Delete
+
+    End If
+
+    Application.Goto Range("A1"), True
+
+   
+
+    '''FA
+
+Line2:
+
+    Application.DisplayAlerts = False
+
+    Worksheets("FA").Delete
+
+    Application.DisplayAlerts = True
+
+    Worksheets("GL").Copy After:=Worksheets("GSTAdj")
+
+    ActiveSheet.Name = "FA"
+
+    With Worksheets("FA").Tab
+
+        .ThemeColor = xlThemeColorLight2
+
+        .TintAndShade = 0.399975585192419
+
+    End With
+
+    If Worksheets("FA").ListObjects.Count > 0 Then
+
+    ActiveSheet.ListObjects(1).Unlist
+
+    End If
+
+    GLrow = Cells(Cells.Rows.Count, "F").End(xlUp).Row
+
+    Range("A1:I" & GLrow).AutoFilter
+
+    Range("A" & GLrow + 2).Value = "Grand Total"
+
+    Range("H" & GLrow + 2).NumberFormat = "General"
+
+    Range("H" & GLrow + 2).FormulaR1C1 = "=SUM(R[" & -GLrow & "]C:R[-1]C)"
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Select
+
+    With Selection.Borders(xlEdgeTop)
+
+        .LineStyle = xlContinuous
+
+        .Weight = xlThin
+
+    End With
+
+    With Selection.Borders(xlEdgeBottom)
+
+        .LineStyle = xlDouble
+
+        .Weight = xlThick
+
+    End With
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Font.Bold = True
+
+   
+
+    If Application.WorksheetFunction.CountIf(Range("I2:I" & GLrow), "17300") > 0 Then
+
+    Range("A1:I" & GLrow).AutoFilter Field:=9, Criteria1:="17300"
+
+    ''''''''Delete hidden rows''''''''
+
+    Dim oRow2 As Range, rng2 As Range
+
+    Dim myRows2 As Range
+
+    With Sheets("FA")
+
+        Set myRows2 = Intersect(.Range("A:A").EntireRow, .UsedRange)
+
+        If myRows2 Is Nothing Then GoTo Line3
+
+    End With
+
+    For Each oRow2 In myRows2.Columns(1).Cells
+
+        If oRow2.EntireRow.Hidden Then
+
+            If rng2 Is Nothing Then
+
+                Set rng2 = oRow2
+
+            Else
+
+                Set rng2 = Union(rng2, oRow2)
+
+            End If
+
+        End If
+
+    Next
+
+    If Not rng2 Is Nothing Then rng2.EntireRow.Delete
+
+    ''''''''Delete hidden rows''''''''
+
+    Else: Range("A2:I" & GLrow).EntireRow.Delete
+
+    End If
+
+    Application.Goto Range("A1"), True
+
+   
+
+    '''EXP
+
+Line3:
+
+    Application.DisplayAlerts = False
+
+    Worksheets("EXP").Delete
+
+    Application.DisplayAlerts = True
+
+    Worksheets("GL").Copy After:=Worksheets("FA")
+
+    ActiveSheet.Name = "EXP"
+
+    With Worksheets("EXP").Tab
+
+        .ThemeColor = xlThemeColorLight2
+
+        .TintAndShade = 0.399975585192419
+
+    End With
+
+    If Worksheets("EXP").ListObjects.Count > 0 Then
+
+    ActiveSheet.ListObjects(1).Unlist
+
+    End If
+
+    GLrow = Cells(Cells.Rows.Count, "F").End(xlUp).Row
+
+    Range("A1:I" & GLrow).AutoFilter
+
+    Range("A" & GLrow + 2).Value = "Grand Total"
+
+    Range("H" & GLrow + 2).NumberFormat = "General"
+
+    Range("H" & GLrow + 2).FormulaR1C1 = "=SUM(R[" & -GLrow & "]C:R[-1]C)"
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Select
+
+    With Selection.Borders(xlEdgeTop)
+
+        .LineStyle = xlContinuous
+
+        .Weight = xlThin
+
+    End With
+
+    With Selection.Borders(xlEdgeBottom)
+
+        .LineStyle = xlDouble
+
+        .Weight = xlThick
+
+    End With
+
+    Range("A" & GLrow + 2 & ":H" & GLrow + 2).Font.Bold = True
+
+   
+
+    If Application.WorksheetFunction.CountIf(Range("B2:B" & GLrow), "EXP*") > 0 Then
+
+    Range("A1:I" & GLrow).AutoFilter Field:=2, Criteria1:="EXP*"
+
+    ''''''''Delete hidden rows''''''''
+
+    Dim oRow3 As Range, rng3 As Range
+
+    Dim myRows3 As Range
+
+    With Sheets("EXP")
+
+        Set myRows3 = Intersect(.Range("A:A").EntireRow, .UsedRange)
+
+        If myRows3 Is Nothing Then GoTo Line4
+
+    End With
+
+    For Each oRow3 In myRows3.Columns(1).Cells
+
+        If oRow3.EntireRow.Hidden Then
+
+            If rng3 Is Nothing Then
+
+                Set rng3 = oRow3
+
+            Else
+
+                Set rng3 = Union(rng3, oRow3)
+
+            End If
+
+        End If
+
+    Next
+
+    If Not rng3 Is Nothing Then rng3.EntireRow.Delete
+
+    ''''''''Delete hidden rows''''''''
+
+    Else: Range("A2:I" & GLrow).EntireRow.Delete
+
+    End If
+
+    Application.Goto Range("A1"), True
+
+   
+
+Line4:
+
+    ''''BCA
+
+    Worksheets("BCA").Range("G47").FormulaR1C1 = "=VLOOKUP(""Grand Total"",EXP!C[-6]:C[3],10,FALSE)"
+
+    Worksheets("BCA").Range("G48").FormulaR1C1 = "=VLOOKUP(""Grand Total"",FA!C[-6]:C[1],8,FALSE)"
+
+    ''''SRM
+
+    Worksheets("SRM").Range("G47").FormulaR1C1 = "=VLOOKUP(""Grand Total"",EXP!C[-6]:C[3],10,FALSE)"
+
+    Worksheets("SRM").Range("G48").FormulaR1C1 = "=VLOOKUP(""Grand Total"",FA!C[-6]:C[1],8,FALSE)"
+
+   
+
+    Application.Goto Worksheets("AP GSTAmount").Range("A1"), True
+
+   
 
 End Sub
